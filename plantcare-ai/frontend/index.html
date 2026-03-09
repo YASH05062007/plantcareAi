@@ -3,29 +3,114 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PlantCare Predictor</title>
-    <link rel="stylesheet" href="css/style.css" />
+    <title>PlantCare AI — Disease Detector</title>
+    <link rel="stylesheet" href="css/style.css?v=4" />
   </head>
   <body>
-    <main class="app-shell">
-      <h1>PlantCare Disease Predictor</h1>
-      <p class="subtitle">Upload a leaf image and get a model prediction.</p>
 
-      <form id="predict-form" class="card">
-        <label for="image-input">Leaf Image</label>
-        <input id="image-input" name="image" type="file" accept="image/*" required />
-        <button type="submit">Predict</button>
-      </form>
+    <!-- Decorative background blobs -->
+    <div class="blob blob-1" aria-hidden="true"></div>
+    <div class="blob blob-2" aria-hidden="true"></div>
+    <div class="blob blob-3" aria-hidden="true"></div>
 
-      <section id="result" class="card hidden" aria-live="polite">
-        <h2>Result</h2>
-        <p><strong>Prediction:</strong> <span id="prediction-text"></span></p>
-        <p><strong>Confidence:</strong> <span id="confidence-text"></span></p>
-      </section>
+    <div class="page-wrapper">
 
-      <p id="error" class="error"></p>
-    </main>
+      <!-- Header -->
+      <header class="site-header">
+        <div class="logo">
+          <span class="logo-icon" aria-hidden="true">🌿</span>
+          <span class="logo-text">PlantCare <strong>AI</strong></span>
+        </div>
+        <p class="tagline">Detect plant diseases in seconds using deep learning</p>
+      </header>
 
-    <script src="js/app.js?v=3"></script>
+      <!-- Upload Card -->
+      <main class="main-content">
+        <form id="predict-form">
+
+          <div id="drop-zone" class="drop-zone" role="button" tabindex="0" aria-label="Upload leaf image">
+            <!-- Preview (hidden until image chosen) -->
+            <img id="preview-img" class="preview-img hidden" alt="Selected leaf preview" />
+
+            <!-- Placeholder content -->
+            <div id="drop-placeholder" class="drop-placeholder">
+              <div class="drop-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+              </div>
+              <p class="drop-title">Drag &amp; drop a leaf image</p>
+              <p class="drop-sub">or <span class="drop-link">click to browse</span></p>
+              <p class="drop-hint">PNG, JPG, WEBP · Max 20 MB</p>
+            </div>
+
+            <input id="image-input" name="image" type="file" accept="image/*" required class="file-input-hidden" />
+          </div>
+
+          <!-- File name badge -->
+          <div id="file-badge" class="file-badge hidden">
+            <span class="file-badge-icon" aria-hidden="true">📄</span>
+            <span id="file-name-text" class="file-badge-name"></span>
+            <button type="button" id="clear-btn" class="file-badge-clear" aria-label="Remove image">✕</button>
+          </div>
+
+          <button type="submit" id="submit-btn" class="btn-predict" disabled>
+            <span class="btn-text">Analyse Plant</span>
+            <span class="btn-icon" aria-hidden="true">🔬</span>
+          </button>
+
+        </form>
+
+        <!-- Loading State -->
+        <div id="loading" class="loading-card hidden" aria-live="polite" aria-busy="true">
+          <div class="spinner"></div>
+          <p>Analysing your plant…</p>
+        </div>
+
+        <!-- Result Card -->
+        <section id="result" class="result-card hidden" aria-live="polite">
+          <div class="result-header">
+            <span class="result-header-icon" aria-hidden="true">🌱</span>
+            <h2>Diagnosis Result</h2>
+          </div>
+
+          <div class="result-body">
+            <div class="result-row">
+              <span class="result-label">Detection</span>
+              <span id="prediction-text" class="result-value"></span>
+            </div>
+
+            <div class="result-row">
+              <span class="result-label">Confidence</span>
+              <span id="confidence-text" class="result-value confidence-value"></span>
+            </div>
+
+            <div class="confidence-bar-track" aria-hidden="true">
+              <div id="confidence-bar" class="confidence-bar-fill"></div>
+            </div>
+          </div>
+
+          <button type="button" id="retry-btn" class="btn-retry">
+            Try another image
+          </button>
+        </section>
+
+        <!-- Error -->
+        <div id="error-box" class="error-box hidden" role="alert">
+          <span class="error-icon" aria-hidden="true">⚠️</span>
+          <p id="error" class="error-msg"></p>
+        </div>
+
+      </main>
+
+      <footer class="site-footer">
+        <p>Powered by TensorFlow &amp; FastAPI</p>
+      </footer>
+
+    </div>
+
+    <script src="js/app.js?v=4"></script>
   </body>
 </html>
