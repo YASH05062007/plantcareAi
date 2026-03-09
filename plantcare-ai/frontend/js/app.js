@@ -8,14 +8,21 @@ const errorText = document.getElementById("error");
 const DEFAULT_API_BASE_URL = "http://localhost:8000";
 
 function getAPIBaseUrl() {
-  // Check if running in GitHub Codespaces
-  if (window.location.hostname.includes("app.github.dev")) {
-    // Extract the base hostname and replace port with 8000
-    // e.g., "solid-space-meme-4qjxjqw695xfq7vg-5500.app.github.dev" 
-    // becomes "solid-space-meme-4qjxjqw695xfq7vg-8000.app.github.dev"
-    const baseHostname = window.location.hostname.replace(/-\d+\.app\.github\.dev$/, "");
-    return `${window.location.protocol}//${baseHostname}-8000.app.github.dev`;
+  const host = window.location.hostname;
+  const proto = window.location.protocol;
+
+  // GitHub Codespaces: replace whatever port number with 8000
+  if (host.includes(".app.github.dev")) {
+    const base = host.replace(/-\d+\.app\.github\.dev$/, "");
+    return `${proto}//${base}-8000.app.github.dev`;
   }
+
+  // GitHub Codespaces (preview domain variant)
+  if (host.includes(".preview.app.github.dev")) {
+    const base = host.replace(/-\d+\.preview\.app\.github\.dev$/, "");
+    return `${proto}//${base}-8000.preview.app.github.dev`;
+  }
+
   return DEFAULT_API_BASE_URL;
 }
 
