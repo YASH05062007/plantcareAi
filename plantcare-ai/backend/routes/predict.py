@@ -1,19 +1,18 @@
-from fastapi import APIRouter, File, HTTPException, UploadFile
-
-from services.model_service import ModelService
+from fastapi import APIRouter, File, HTTPException, Request, UploadFile
 
 router = APIRouter()
-model_service = ModelService()
 
 
 @router.post("/predict")
-async def predict(image: UploadFile = File(...)) -> dict:
+async def predict(request: Request, image: UploadFile = File(...)) -> dict:
     if not image.content_type or not image.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="Uploaded file must be an image")
 
     image_bytes = await image.read()
     if not image_bytes:
         raise HTTPException(status_code=400, detail="Uploaded file is empty")
+
+    model_service = request.app.state.model_service
 
     try:
         prediction, confidence = model_service.predict(image_bytes)

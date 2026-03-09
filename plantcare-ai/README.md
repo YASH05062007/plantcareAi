@@ -7,6 +7,7 @@ Cleanly separated PlantCare project with a FastAPI backend and static frontend.
 ```text
 plantcare-ai/
 ├── backend/
+│   ├── .env
 │   ├── main.py
 │   ├── requirements.txt
 │   ├── models/
@@ -19,6 +20,7 @@ plantcare-ai/
 │   └── utils/
 │       └── image_processing.py
 └── frontend/
+    ├── .env
     ├── index.html
     ├── css/
     │   └── style.css
@@ -35,10 +37,18 @@ cd backend
 pip install -r requirements.txt
 ```
 
+Configure backend environment (`backend/.env`):
+
+```env
+MODEL_PATH=models/plant_model.h5
+HOST=0.0.0.0
+PORT=8000
+```
+
 Run API server:
 
 ```bash
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+uvicorn main:app --reload
 ```
 
 API endpoint:
@@ -54,8 +64,26 @@ API endpoint:
 }
 ```
 
+FastAPI docs:
+
+- Swagger UI: `http://localhost:8000/docs`
+- ReDoc: `http://localhost:8000/redoc`
+
 ## Frontend
 
-Open `frontend/index.html` in a browser. It sends image uploads to:
+Configure frontend environment (`frontend/.env`):
 
-- `http://localhost:8000/predict`
+```env
+API_BASE_URL=http://localhost:8000
+```
+
+Run a static file server from `frontend` so `.env` can be loaded by the browser:
+
+```bash
+cd frontend
+python -m http.server 5500
+```
+
+Then open:
+
+- `http://localhost:5500`
