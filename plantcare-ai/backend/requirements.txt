@@ -2,6 +2,6 @@ fastapi
 uvicorn[standard]
 python-dotenv
 tensorflow-cpu==2.18.0
-numpy
+numpy<2.0
 pillow
 python-multipart
