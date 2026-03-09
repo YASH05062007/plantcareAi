@@ -41,8 +41,10 @@ ENV/
 env/
 
 # Environment files
-.env
+# Backend .env (contains no secrets here but keep local)
+plantcare-ai/backend/.env
 .env.local
+# Do NOT ignore frontend/.env — it holds the public API URL needed for deployment
 
 # Model files (optional - uncomment if models are too large for git)
 # *.h5

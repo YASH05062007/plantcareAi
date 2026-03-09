@@ -4,10 +4,19 @@ const DEFAULT_API_BASE_URL = "http://localhost:8000";
 function getAPIBaseUrl() {
   const host  = window.location.hostname;
   const proto = window.location.protocol;
+
+  // GitHub Codespaces: swap port in URL to 8000
   if (host.includes(".app.github.dev")) {
     const base = host.replace(/-\d+\.app\.github\.dev$/, "");
     return `${proto}//${base}-8000.app.github.dev`;
   }
+
+  // Any real deployed domain (Render, Vercel, etc.) — .env will override this
+  // but return null so loadFrontendEnv() is the only source of truth
+  if (host !== "localhost" && host !== "127.0.0.1" && !host.startsWith("192.168.")) {
+    return null;
+  }
+
   return DEFAULT_API_BASE_URL;
 }
 
@@ -32,7 +41,12 @@ async function loadFrontendEnv() {
 let apiBaseUrl = getAPIBaseUrl();
 (async () => {
   const env = await loadFrontendEnv();
-  if (env.API_BASE_URL) apiBaseUrl = env.API_BASE_URL;
+  if (env.API_BASE_URL) {
+    apiBaseUrl = env.API_BASE_URL;
+  } else if (!apiBaseUrl) {
+    // No .env and not localhost/Codespaces — show a clear error instead of calling localhost
+    console.error("❌ No API_BASE_URL configured. Add a frontend/.env with API_BASE_URL=https://your-backend.onrender.com");
+  }
   console.log("🌿 PlantCare API:", apiBaseUrl);
 })();
 
