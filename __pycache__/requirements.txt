@@ -1,8 +1,0 @@
-tensorflow
-opencv-python
-numpy
-matplotlib
-flask
-pillow
-scikit-learn
-werkzeug
